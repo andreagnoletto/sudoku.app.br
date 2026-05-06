@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS custom properties (light theme) ───────────────────────────── */
+:root {
+  --background: 0 0% 98%;
+  --foreground: 222 47% 11%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222 47% 11%;
+
+  --border: 214 32% 91%;
+  --muted-foreground: 215 16% 47%;
+
+  --primary: 221 83% 53%;
+  --primary-foreground: 0 0% 100%;
+
+  --ring: 221 83% 53%;
+}
+
+/* ── Dark theme ─────────────────────────────────────────────────────── */
+.dark {
+  --background: 222 47% 9%;
+  --foreground: 210 40% 96%;
+
+  --card: 222 47% 12%;
+  --card-foreground: 210 40% 96%;
+
+  --border: 217 33% 22%;
+  --muted-foreground: 215 20% 55%;
+
+  --primary: 217 91% 60%;
+  --primary-foreground: 222 47% 9%;
+
+  --ring: 217 91% 60%;
+}
+
+/* ── Tailwind semantic aliases ──────────────────────────────────────── */
+@layer base {
+  body {
+    @apply bg-background text-foreground;
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+/* ── Print styles ────────────────────────────────────────────────────── */
+@media print {
+  /* Hide everything except the board */
+  header,
+  nav,
+  .no-print {
+    display: none !important;
+  }
+
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  /* Center the board on the page */
+  main {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    gap: 0 !important;
+  }
+
+  /* Force the board to fill a good chunk of the page */
+  [role="grid"] {
+    width: 90mm !important;
+    height: 90mm !important;
+    max-width: none !important;
+    border: 2px solid black !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  /* Cell borders */
+  [role="gridcell"] {
+    background: white !important;
+    color: black !important;
+    font-weight: 400 !important;
+  }
+
+  /* Clue digits (given numbers) printed bold */
+  [role="gridcell"].font-bold {
+    font-weight: 700 !important;
+  }
+
+  /* Thick block borders */
+  [role="gridcell"][class*="border-t-2"] {
+    border-top: 2px solid black !important;
+  }
+  [role="gridcell"][class*="border-l-2"] {
+    border-left: 2px solid black !important;
+  }
+  [role="gridcell"] {
+    border-right: 1px solid #aaa !important;
+    border-bottom: 1px solid #aaa !important;
+  }
+}

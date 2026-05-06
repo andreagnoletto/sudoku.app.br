@@ -1,0 +1,43 @@
+services:
+  sudoku:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: wise-sudoku:latest
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - NITRO_HOST=0.0.0.0
+      - NITRO_PORT=3000
+      # SERVICE_FQDN_* é convenção do Coolify: a UI gera/preenche automaticamente
+      # quando você define o domínio no recurso. Também pode ser sobrescrito em
+      # "Environment Variables" no Coolify.
+      - SERVICE_FQDN_SUDOKU
+      - APEX_DOMAIN
+    expose:
+      - "3000"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 20s
+    labels:
+      # Coolify / Traefik – domínio público
+      - traefik.enable=true
+      - coolify.managed=true
+      # HTTP -> redirect para HTTPS
+      - traefik.http.routers.sudoku-http.entrypoints=http
+      - traefik.http.routers.sudoku-http.rule=Host(`${SERVICE_FQDN_SUDOKU}`) || Host(`${APEX_DOMAIN}`)
+      - traefik.http.routers.sudoku-http.middlewares=redirect-to-https
+      # HTTPS
+      - traefik.http.routers.sudoku-https.entrypoints=https
+      - traefik.http.routers.sudoku-https.rule=Host(`${SERVICE_FQDN_SUDOKU}`) || Host(`${APEX_DOMAIN}`)
+      - traefik.http.routers.sudoku-https.tls=true
+      - traefik.http.routers.sudoku-https.tls.certresolver=letsencrypt
+      - traefik.http.services.sudoku.loadbalancer.server.port=3000
+      # Redirect apex -> www
+      - traefik.http.middlewares.sudoku-apex-to-www.redirectregex.regex=^https?://${APEX_DOMAIN}/(.*)
+      - traefik.http.middlewares.sudoku-apex-to-www.redirectregex.replacement=https://${SERVICE_FQDN_SUDOKU}/$$1
+      - traefik.http.middlewares.sudoku-apex-to-www.redirectregex.permanent=true
+      - traefik.http.routers.sudoku-https.middlewares=sudoku-apex-to-www
