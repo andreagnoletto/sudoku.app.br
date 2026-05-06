@@ -45,11 +45,11 @@ function borderClass(row: number, col: number): string {
         : isConflict
           ? 'bg-red-100 dark:bg-red-950/30 text-red-700 dark:text-red-400'
           : isSameDigit
-            ? 'bg-primary/20 text-foreground'
+            ? 'bg-primary/25 text-foreground'
             : isHighlightedCross
-              ? 'bg-primary/10 text-foreground'
+              ? 'bg-primary/[0.04] text-foreground/80'
               : isHighlightedBlock
-                ? 'bg-muted/50 text-foreground'
+                ? 'bg-muted/30 text-foreground/80'
                 : (isCorrect && !isClue)
                   ? 'bg-emerald-50 dark:bg-emerald-950/25 text-emerald-700 dark:text-emerald-400'
                   : 'bg-background text-foreground',
