@@ -9,10 +9,6 @@ services:
       - NODE_ENV=${NODE_ENV:-production}
       - NITRO_HOST=0.0.0.0
       - NITRO_PORT=3000
-      # Coolify preenche automaticamente a partir do campo "Domains" do recurso
-      # (use https://www.sudoku.app.br). O sufixo _3000 informa a porta interna.
-      # Não defina manualmente em Environment Variables.
-      - SERVICE_FQDN_SUDOKU_3000
     expose:
       - "3000"
     healthcheck:
@@ -21,10 +17,4 @@ services:
       timeout: 5s
       retries: 3
       start_period: 20s
-    networks:
-      - coolify
-
-networks:
-  coolify:
-    external: true
 
